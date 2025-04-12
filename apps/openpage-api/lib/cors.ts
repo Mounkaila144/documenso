@@ -21,7 +21,11 @@ interface CorsOptions {
 
 const defaultOptions: CorsOptions = {
   origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization,X-Requested-With,X-CSRF-TOKEN,Accept,Origin,X-Auth-Token,Cache-Control',
+  exposedHeaders: 'Content-Range,X-Content-Range',
+  credentials: false,
+  maxAge: 86400,
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };

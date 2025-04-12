@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test CORS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test des requêtes CORS</h1>
+  
+  <div>
+    <label for="url">URL de l'API:</label>
+    <input type="text" id="url" style="width: 80%;" value="http://localhost:3000/api/v1/documents" />
+  </div>
+  
+  <div style="margin-top: 20px;">
+    <button onclick="testFetch()">Tester avec Fetch</button>
+    <button onclick="testXHR()">Tester avec XMLHttpRequest</button>
+    <button onclick="testOptionsRequest()">Tester OPTIONS (preflight)</button>
+  </div>
+  
+  <div id="result">
+    <p>Les résultats apparaîtront ici...</p>
+  </div>
+
+  <script>
+    const resultDiv = document.getElementById('result');
+    
+    function showResult(success, message, details = '') {
+      resultDiv.innerHTML = `
+        <div style="color: ${success ? 'green' : 'red'}">
+          <h3>${success ? 'Succès' : 'Erreur'}</h3>
+          <p>${message}</p>
+          ${details ? `<pre>${details}</pre>` : ''}
+        </div>
+      `;
+    }
+    
+    async function testFetch() {
+      const url = document.getElementById('url').value;
+      
+      try {
+        resultDiv.innerHTML = '<p>Chargement...</p>';
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
+        
+        const data = await response.json();
+        
+        const headers = {};
+        response.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+        
+        showResult(
+          true, 
+          `Requête réussie avec statut: ${response.status}`,
+          JSON.stringify({ headers, data }, null, 2)
+        );
+      } catch (error) {
+        showResult(false, `Erreur CORS: ${error.message}`);
+        console.error('Erreur complète:', error);
+      }
+    }
+    
+    function testXHR() {
+      const url = document.getElementById('url').value;
+      resultDiv.innerHTML = '<p>Chargement...</p>';
+      
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('Accept', 'application/json');
+      
+      xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            showResult(
+              true,
+              `Requête réussie avec statut: ${xhr.status}`,
+              JSON.stringify(data, null, 2)
+            );
+          } catch (e) {
+            showResult(
+              true,
+              `Requête réussie avec statut: ${xhr.status}, mais erreur de parsing JSON`,
+              xhr.responseText
+            );
+          }
+        } else {
+          showResult(
+            false,
+            `Erreur HTTP: ${xhr.status}`,
+            xhr.responseText
+          );
+        }
+      };
+      
+      xhr.onerror = function() {
+        showResult(false, "Erreur CORS/Réseau lors de la requête");
+      };
+      
+      xhr.send();
+    }
+    
+    function testOptionsRequest() {
+      const url = document.getElementById('url').value;
+      resultDiv.innerHTML = '<p>Chargement...</p>';
+      
+      const xhr = new XMLHttpRequest();
+      xhr.open('OPTIONS', url, true);
+      
+      // Simuler une requête preflight
+      xhr.setRequestHeader('Access-Control-Request-Method', 'GET');
+      xhr.setRequestHeader('Access-Control-Request-Headers', 'Content-Type, Authorization');
+      
+      xhr.onload = function() {
+        const corsHeaders = {
+          'Access-Control-Allow-Origin': xhr.getResponseHeader('Access-Control-Allow-Origin'),
+          'Access-Control-Allow-Methods': xhr.getResponseHeader('Access-Control-Allow-Methods'),
+          'Access-Control-Allow-Headers': xhr.getResponseHeader('Access-Control-Allow-Headers'),
+          'Access-Control-Max-Age': xhr.getResponseHeader('Access-Control-Max-Age')
+        };
+        
+        showResult(
+          true,
+          `Requête OPTIONS réussie avec statut: ${xhr.status}`,
+          `En-têtes CORS reçus:\n${JSON.stringify(corsHeaders, null, 2)}`
+        );
+      };
+      
+      xhr.onerror = function() {
+        showResult(false, "Erreur CORS lors de la requête OPTIONS");
+      };
+      
+      xhr.send();
+    }
+  </script>
+</body>
+</html> 

@@ -9,6 +9,8 @@ import { openApiDocument } from '@documenso/trpc/server/open-api';
 
 import { filesRoute } from './api/files';
 import { type AppContext, appContext } from './context';
+import { corsMiddleware } from './cors';
+import { expressCorsMiddleware } from './express-cors';
 import { appMiddleware } from './middleware';
 import { openApiTrpcServerHandler } from './trpc/hono-trpc-open-api';
 import { reactRouterTrpcServer } from './trpc/hono-trpc-remix';
@@ -32,6 +34,15 @@ app.use(appContext);
  */
 app.use('*', appMiddleware);
 
+// Appliquer CORS à toutes les routes API pour éviter les problèmes
+app.use('/api/*', corsMiddleware);
+
+// On peut également appliquer le middleware Express CORS si le middleware Hono ne fonctionne pas
+// Cela nécessite une intégration Express-Hono que nous pourrions ajouter si nécessaire
+// app.use('/api/*', (c) => {
+//   // Intégration express-hono serait nécessaire ici
+// });
+
 // Auth server.
 app.route('/api/auth', auth);
 
@@ -39,7 +50,9 @@ app.route('/api/auth', auth);
 app.route('/api/files', filesRoute);
 
 // API servers.
+// Le middleware CORS est déjà appliqué via le pattern '/api/*' ci-dessus
 app.route('/api/v1', tsRestHonoApp);
+
 app.use('/api/jobs/*', jobsClient.getApiHandler());
 app.use('/api/trpc/*', reactRouterTrpcServer);
 
