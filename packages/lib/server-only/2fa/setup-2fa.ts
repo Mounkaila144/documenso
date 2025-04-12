@@ -12,7 +12,7 @@ type SetupTwoFactorAuthenticationOptions = {
   user: Pick<User, 'id' | 'email'>;
 };
 
-const ISSUER = 'Documenso';
+const ISSUER = 'Icall26Sign';
 
 export const setupTwoFactorAuthentication = async ({
   user,

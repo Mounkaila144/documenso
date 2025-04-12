@@ -2,12 +2,12 @@ import type { DocsThemeConfig } from 'nextra-theme-docs';
 import { useConfig } from 'nextra-theme-docs';
 
 const themeConfig: DocsThemeConfig = {
-  logo: <span>Documenso</span>,
+  logo: <span>Icall26Sign</span>,
   head: function useHead() {
     const config = useConfig<{ title?: string; description?: string }>();
 
-    const title = `${config.frontMatter.title} | Documenso Docs` || 'Documenso Docs';
-    const description = config.frontMatter.description || 'The official Documenso documentation';
+    const title = `${config.frontMatter.title} | Icall26Sign Docs` || 'Icall26Sign Docs';
+    const description = config.frontMatter.description || 'The official Icall26Sign documentation';
 
     return (
       <>
@@ -34,7 +34,7 @@ const themeConfig: DocsThemeConfig = {
       <span>
         {new Date().getFullYear()} ©{' '}
         <a href="https://documen.so" target="_blank">
-          Documenso
+          Icall26Sign
         </a>
         .
       </span>
@@ -44,7 +44,7 @@ const themeConfig: DocsThemeConfig = {
   primarySaturation: 48.47,
   useNextSeoProps() {
     return {
-      titleTemplate: '%s | Documenso Docs',
+      titleTemplate: '%s | Icall26Sign Docs',
     };
   },
 };

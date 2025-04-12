@@ -80,7 +80,7 @@ export const sendDeleteEmail = async ({ documentId, reason }: SendDeleteEmailOpt
       name: name || '',
     },
     from: {
-      name: env('NEXT_PRIVATE_SMTP_FROM_NAME') || 'Documenso',
+      name: env('NEXT_PRIVATE_SMTP_FROM_NAME') || 'Icall26Sign',
       address: env('NEXT_PRIVATE_SMTP_FROM_ADDRESS') || 'noreply@documenso.com',
     },
     subject: i18n._(msg`Document Deleted!`),

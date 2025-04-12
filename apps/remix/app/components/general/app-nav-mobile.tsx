@@ -3,7 +3,7 @@ import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
 import { Link, useParams } from 'react-router';
 
-import LogoImage from '@documenso/assets/logo.png';
+import LogoImage from '@documenso/assets/logo.svg';
 import { authClient } from '@documenso/auth/client';
 import { getRootHref } from '@documenso/lib/utils/params';
 import { Sheet, SheetContent } from '@documenso/ui/primitives/sheet';
@@ -50,7 +50,7 @@ export const AppNavMobile = ({ isMenuOpen, onMenuOpenChange }: AppNavMobileProps
         <Link to="/" onClick={handleMenuItemClick}>
           <img
             src={LogoImage}
-            alt="Documenso Logo"
+            alt="Icall26Sign Logo"
             className="dark:invert"
             width={170}
             height={25}
@@ -83,7 +83,7 @@ export const AppNavMobile = ({ isMenuOpen, onMenuOpenChange }: AppNavMobileProps
           </div>
 
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} Documenso, Inc. <br /> All rights reserved.
+            © {new Date().getFullYear()} Icall26Sign, Inc. <br /> All rights reserved.
           </p>
         </div>
       </SheetContent>
